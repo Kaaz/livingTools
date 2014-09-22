@@ -4,19 +4,20 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import novaz.mod.PassiveEnchanting;
 import novaz.mod.references.Names;
+
+import java.util.Set;
 
 /**
  * Created by kaaz on 22-9-2014.
  */
-public class ItemLivingHoe extends net.minecraft.item.ItemHoe {
-
-	public ItemLivingHoe() {
-
-		super(ToolMaterial.IRON);
-		setUnlocalizedName(Names.Items.LIVING_HOE);
+public class PEItemTool extends ItemTool{
+	protected PEItemTool(float damage, ToolMaterial toolMaterial, Set goodAgainst) {
+		super(damage, toolMaterial, goodAgainst);
 		setCreativeTab(PassiveEnchanting.TAB);
+		this.setNoRepair();
 	}
 	@Override
 	@SideOnly(Side.CLIENT)

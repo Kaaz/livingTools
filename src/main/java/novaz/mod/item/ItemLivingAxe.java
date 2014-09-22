@@ -1,41 +1,39 @@
 package novaz.mod.item;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import novaz.mod.PassiveEnchanting;
 import novaz.mod.references.Names;
 
+import java.util.Set;
+
 /**
  * Created by kaaz on 22-9-2014.
  */
-public class ItemLivingAxe extends net.minecraft.item.ItemAxe {
+public class ItemLivingAxe extends PEItemTool {
+	private static final Set blocksEffectiveAgainst = Sets.newHashSet(new Block[]{Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin});
 
 	public ItemLivingAxe() {
 
-		super(ToolMaterial.IRON);
+		super(2f, ToolMaterial.IRON, blocksEffectiveAgainst);
 		setUnlocalizedName(Names.Items.LIVING_AXE);
 		setCreativeTab(PassiveEnchanting.TAB);
 	}
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister)
+	public Set<String> getToolClasses(ItemStack itemStack)
 	{
-		itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
+		return ImmutableSet.of("axe");
 	}
 	@Override
-	public String getUnlocalizedName() {
-		return String.format("item.%s%s", Names.RESOURCE_PREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-	}
-
-	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
-		return String.format("item.%s%s", Names.RESOURCE_PREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-	}
-
-	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
-		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+	public float func_150893_a(ItemStack itemStack, Block block)
+	{
+		return block.getMaterial() != net.minecraft.block.material.Material.wood && block.getMaterial() != net.minecraft.block.material.Material.plants && block.getMaterial() != net.minecraft.block.material.Material.vine ? super.func_150893_a(itemStack, block) : this.efficiencyOnProperMaterial;
 	}
 }
