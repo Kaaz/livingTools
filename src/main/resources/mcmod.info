@@ -1,0 +1,16 @@
+[
+{
+  "modid": "kaaz",
+  "name": "Passive Enchants",
+  "description": "Enchanting overhaul. Removes the old enchanting and instead adds an RPG-like system where you level up your skills and slowly gain the enchanting effects",
+  "version": "0.1",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["xlkaaz"],
+  "credits": "Thanks mom",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
