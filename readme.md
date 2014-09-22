@@ -8,6 +8,7 @@ To install
 
 
 For Intellij only:
+
 1. Open intellij
 2. Import project and navigate to the workspace and click the build.gradle
 3. close intellij
