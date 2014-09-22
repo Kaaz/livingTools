@@ -5,6 +5,7 @@ To install
 3. Open console in that directory
 4. enter the command: gradlew setupDecompWorkspace --refresh-dependencies
 5. Fix your IDE. For Intellij see below; for other IDE's seehttp://www.minecraftforge.net/wiki/Installation/Source
+6. clone the repository
 
 
 For Intellij only:
