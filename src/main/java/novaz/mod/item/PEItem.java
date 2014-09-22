@@ -1,7 +1,7 @@
-package kaaz.mod.item;
+package novaz.mod.item;
 
-import kaaz.mod.PassiveEnchanting;
 import net.minecraft.item.Item;
+import novaz.mod.PassiveEnchanting;
 
 /**
  * Created by kaaz on 22-9-2014.

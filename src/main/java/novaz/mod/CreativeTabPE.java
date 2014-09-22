@@ -1,4 +1,4 @@
-package kaaz.mod;
+package novaz.mod;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;

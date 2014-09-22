@@ -1,4 +1,4 @@
-package kaaz.mod.block;
+package novaz.mod.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

@@ -1,9 +1,8 @@
-package kaaz.mod.block;
+package novaz.mod.block;
 
-import kaaz.mod.PassiveEnchanting;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
+import novaz.mod.PassiveEnchanting;
 
 public class PEBlock extends Block {
 

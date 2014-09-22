@@ -1,15 +1,14 @@
-package kaaz.mod;
+package novaz.mod;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import kaaz.mod.block.testBlock;
-import kaaz.mod.item.testItem;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
+import novaz.mod.item.testItem;
+import novaz.mod.block.testBlock;
 
 @Mod(modid = PassiveEnchanting.MODID, version = PassiveEnchanting.VERSION, dependencies = "required-after:Forge@[10.10,);required-after:FML@[7.2,)")
 public class PassiveEnchanting {
@@ -22,7 +21,7 @@ public class PassiveEnchanting {
 	public static Item testItem;
 	public static Block testBlock;
 
-	@EventHandler
+	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		cfg.load();
