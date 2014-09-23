@@ -1,9 +1,14 @@
 package novaz.mod;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.config.Configuration;
+import novaz.mod.proxy.CommonProxy;
 import novaz.mod.startup.PEBlocks;
 import novaz.mod.startup.PEItems;
 import novaz.mod.startup.PERecipes;
@@ -15,6 +20,13 @@ public class PassiveEnchanting {
 	private static boolean EXAMPLE_BOOL = false;
 	private static String EXAMPLE_STRING = "test";
 	public static final CreativeTabs TAB = new CreativeTabPE(MOD_ID);
+	@Mod.Instance(PassiveEnchanting.MOD_ID)
+	public static PassiveEnchanting instance = new PassiveEnchanting();
+	@SidedProxy(clientSide = "novaz.mod.proxy.ClientProxy", serverSide = "novaz.mod.proxy.ServerProxy")
+	public static CommonProxy proxy;
+
+	private static int modGuiIndex = 0;
+	public static final int GUI_ITEM_UPGRADE = modGuiIndex++;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -26,5 +38,16 @@ public class PassiveEnchanting {
 		PEItems.init();
 		PEBlocks.init();
 		PERecipes.initRecipes();
+		this.proxy.preInit(event);
+	}
+
+	@Mod.EventHandler
+	public void init(FMLInitializationEvent e) {
+		this.proxy.init(e);
+	}
+
+	@Mod.EventHandler
+	public void postInit(FMLPostInitializationEvent e) {
+		this.proxy.postInit(e);
 	}
 }

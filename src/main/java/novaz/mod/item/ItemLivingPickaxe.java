@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import novaz.mod.PassiveEnchanting;
 import novaz.mod.references.Names;
 
 import java.util.List;
@@ -106,9 +107,13 @@ public class ItemLivingPickaxe extends PEItemTool {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack p_77659_1_, World p_77659_2_, EntityPlayer p_77659_3_) {
+	public ItemStack onItemRightClick(ItemStack p_77659_1_, World world, EntityPlayer player) {
 		//rightclick spend points
-		return super.onItemRightClick(p_77659_1_, p_77659_2_, p_77659_3_);
+		if (world.isRemote) {//client
+			//PassiveEnchanting.proxy.openJournal(player);
+			player.openGui(PassiveEnchanting.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+		}
+		return super.onItemRightClick(p_77659_1_, world, player);
 	}
 
 	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
