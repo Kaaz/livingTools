@@ -81,19 +81,19 @@ public class ItemLivingPickaxe extends PEItemTool {
 			int xpToNext = XP_PER_LEVEL * (level + 1);
 			int progress = (int) (((float) xp / (float) xpToNext) * 100);
 			String owner = itemStack.stackTagCompound.getString("owner");
-			list.add("owner: " + owner);
-			list.add("level " + level);
-			list.add(String.format("Experience: %s%% [%s / %s]", colorfy(progress,EnumChatFormatting.AQUA), colorfy(xp), colorfy(xpToNext)));
+			list.add("owner: " + colorfy(owner));
+			list.add("level " + colorfy(level));
+			list.add(String.format("Experience: %s %% [%s / %s]", colorfy(progress,EnumChatFormatting.AQUA), colorfy(xp), colorfy(xpToNext)));
 			if(points>0){
 				list.add(String.format("You have %s unspend point(s)! Rightclick to spend them",colorfy(points)));
 			}
 		}
 	}
 	public String colorfy(Object o){
-		return colorfy(o, EnumChatFormatting.DARK_PURPLE);
+		return colorfy(o, EnumChatFormatting.AQUA);
 	}
 	public String colorfy(Object o, EnumChatFormatting col){
-		return ""+col+ o + EnumChatFormatting.RESET;
+		return ""+col+ o + EnumChatFormatting.GRAY;
 	}
 	@Override
 	public Set<String> getToolClasses(ItemStack itemStack) {
@@ -103,6 +103,12 @@ public class ItemLivingPickaxe extends PEItemTool {
 	@Override
 	public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
 		return super.getDigSpeed(itemStack, block, meta);
+	}
+
+	@Override
+	public ItemStack onItemRightClick(ItemStack p_77659_1_, World p_77659_2_, EntityPlayer p_77659_3_) {
+		//rightclick spend points
+		return super.onItemRightClick(p_77659_1_, p_77659_2_, p_77659_3_);
 	}
 
 	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
