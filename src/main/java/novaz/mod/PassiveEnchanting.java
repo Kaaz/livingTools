@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.config.Configuration;
 import novaz.mod.startup.PEBlocks;
 import novaz.mod.startup.PEItems;
+import novaz.mod.startup.PERecipes;
 
 @Mod(modid = PassiveEnchanting.MOD_ID, version = PassiveEnchanting.VERSION, dependencies = "required-after:Forge@[10.10,);required-after:FML@[7.2,)")
 public class PassiveEnchanting {
@@ -24,6 +25,6 @@ public class PassiveEnchanting {
 		cfg.save();
 		PEItems.init();
 		PEBlocks.init();
-
+		PERecipes.initRecipes();
 	}
 }

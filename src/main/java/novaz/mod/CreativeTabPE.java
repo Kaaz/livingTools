@@ -9,7 +9,7 @@ public class CreativeTabPE extends CreativeTabs {
 		super(lable);
 	}
 	public String getTabLabel() {
-		return "Passive Enchanting";
+		return "PassiveEnchanting";
 	}
 
 	public Item getTabIconItem() {

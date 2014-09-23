@@ -20,6 +20,7 @@ public class ItemLivingSword extends net.minecraft.item.ItemSword {
 		super(ToolMaterial.IRON);
 		setUnlocalizedName(Names.Items.LIVING_SWORD);
 		setCreativeTab(PassiveEnchanting.TAB);
+		setNoRepair();
 	}
 	@Override
 	@SideOnly(Side.CLIENT)
