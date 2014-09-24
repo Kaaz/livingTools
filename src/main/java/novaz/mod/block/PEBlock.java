@@ -31,6 +31,6 @@ public class PEBlock extends Block {
 	}
 	@Override
 	public String getUnlocalizedName() {
-		return String.format("item.%s%s", Names.RESOURCE_PREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("block.%s%s", Names.RESOURCE_PREFIX, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 }

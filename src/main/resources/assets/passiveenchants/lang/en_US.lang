@@ -3,5 +3,13 @@
 #creative tab
 itemGroup.PassiveEnchanting=Passive Enchanting
 
+#blocks
+block.passiveenchants:testBlock.name=Test Block
+
 #items
-items.passiveenchants:itemLivingPickaxe.name=Living Pickaxe
+item.passiveenchants:itemLivingPickaxe.name=Living Pickaxe
+item.passiveenchants:itemLivingHoe.name=Living Hoe
+item.passiveenchants:itemLivingAxe.name=Living Axe
+item.passiveenchants:itemLivingShovel.name=Living Shovel
+item.passiveenchants:itemLivingSword.name=Living Sword
+item.passiveenchants:itemTest.name=Test Item

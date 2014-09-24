@@ -12,4 +12,7 @@ public class Names {
 		public static final String LIVING_SWORD = "itemLivingSword";
 		public static final String TEST = "itemTest";
 	}
+	public static final class Blocks{
+
+	}
 }
