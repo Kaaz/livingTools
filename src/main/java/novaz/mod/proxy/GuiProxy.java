@@ -17,8 +17,7 @@ public class GuiProxy implements IGuiHandler {
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-			if (ID == PassiveEnchanting.GUI_ITEM_UPGRADE) {
-			System.out.print("create gui.\n");
+		if (ID == PassiveEnchanting.GUI_ITEM_UPGRADE) {
 			return new ItemUpgradeGui(player);
 		}
 		return null;

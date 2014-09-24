@@ -140,14 +140,12 @@ public class ItemLivingPickaxe extends PEItemTool {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack p_77659_1_, World world, EntityPlayer player) {
-		//rightclick spend points
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		if (world.isRemote) {//client
-			//PassiveEnchanting.proxy.openJournal(player);
 			player.openGui(PassiveEnchanting.instance, PassiveEnchanting.GUI_ITEM_UPGRADE, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 
 		}
-		return super.onItemRightClick(p_77659_1_, world, player);
+		return super.onItemRightClick(itemStack, world, player);
 	}
 
 	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
@@ -160,6 +158,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 			if (points > 0) {
 				itemStack.stackTagCompound.setInteger("stats_" + statName, itemStack.stackTagCompound.getInteger("stats_" + statName) + 1);
 				itemStack.stackTagCompound.setInteger("points", points - 1);
+				System.out.println("upgraded " + statName);
 			}
 		}
 	}
