@@ -30,6 +30,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 		super(2f, ToolMaterial.IRON, worksAgainst);
 		setUnlocalizedName(Names.Items.LIVING_PICKAXE);
 		setNoRepair();
+		setMaxDamage(10);
 	}
 
 	public boolean func_150897_b(Block p_150897_1_) {
@@ -41,15 +42,19 @@ public class ItemLivingPickaxe extends PEItemTool {
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack p_150894_1_, World p_150894_2_, Block p_150894_3_, int p_150894_4_, int p_150894_5_, int p_150894_6_, EntityLivingBase p_150894_7_) {
+	public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase player) {
 
-		if((double)p_150894_3_.getBlockHardness(p_150894_2_, p_150894_4_, p_150894_5_, p_150894_6_) != 0.0D){
-
-			//p_150894_1_.damageItem(1, p_150894_7_);
-			if(p_150894_1_.stackTagCompound.getInteger("level")<MAX_LEVEL){
-				p_150894_1_.stackTagCompound.setInteger("xp",p_150894_1_.stackTagCompound.getInteger("xp")+1);
+		if((double)block.getBlockHardness(world, x, y, z) != 0.0D){
+			if (itemStack.stackTagCompound == null) {
+				initItem(itemStack,(EntityPlayer)player);
 			}
-			checkLevelUp(p_150894_1_, p_150894_7_);
+			//p_150894_1_.damageItem(1, p_150894_7_);
+
+			if (itemStack.stackTagCompound.getInteger("level") < MAX_LEVEL) {
+				itemStack.stackTagCompound.setInteger("xp", itemStack.stackTagCompound.getInteger("xp") + 1);
+			}
+
+			checkLevelUp(itemStack, player);
 		}
 		//return super.onBlockDestroyed(p_150894_1_, p_150894_2_, p_150894_3_, p_150894_4_, p_150894_5_, p_150894_6_, p_150894_7_);
 		return true;
@@ -67,6 +72,9 @@ public class ItemLivingPickaxe extends PEItemTool {
 	}
 	@Override
 	public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
+		initItem(itemStack,player);
+	}
+	private void initItem(ItemStack itemStack, EntityPlayer player){
 		itemStack.stackTagCompound = new NBTTagCompound();
 		itemStack.stackTagCompound.setString("owner", player.getDisplayName());
 		itemStack.stackTagCompound.setInteger("level", 0);
@@ -75,6 +83,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 	}
 	public void addInformation(ItemStack itemStack, EntityPlayer player,
 							   List list, boolean par4) {
+
 		if (itemStack.stackTagCompound != null) {
 			int level = itemStack.stackTagCompound.getInteger("level");
 			int xp = itemStack.stackTagCompound.getInteger("xp");
@@ -86,7 +95,8 @@ public class ItemLivingPickaxe extends PEItemTool {
 			list.add("level " + colorfy(level));
 			list.add(String.format("Experience: %s %% [%s / %s]", colorfy(progress,EnumChatFormatting.AQUA), colorfy(xp), colorfy(xpToNext)));
 			if(points>0){
-				list.add(String.format("You have %s unspend point(s)! Rightclick to spend them",colorfy(points)));
+				list.add(String.format("You have %s unspend point(s)!",colorfy(points)));
+				list.add(EnumChatFormatting.ITALIC+" Rightclick to spend them ");
 			}
 		}
 	}
@@ -111,7 +121,8 @@ public class ItemLivingPickaxe extends PEItemTool {
 		//rightclick spend points
 		if (world.isRemote) {//client
 			//PassiveEnchanting.proxy.openJournal(player);
-			player.openGui(PassiveEnchanting.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+			player.openGui(PassiveEnchanting.instance, PassiveEnchanting.GUI_ITEM_UPGRADE, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+
 		}
 		return super.onItemRightClick(p_77659_1_, world, player);
 	}

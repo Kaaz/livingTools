@@ -9,6 +9,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.config.Configuration;
 import novaz.mod.proxy.CommonProxy;
+import novaz.mod.proxy.GuiProxy;
 import novaz.mod.startup.PEBlocks;
 import novaz.mod.startup.PEItems;
 import novaz.mod.startup.PERecipes;
@@ -30,6 +31,7 @@ public class PassiveEnchanting {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiProxy());
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		cfg.load();
 		EXAMPLE_BOOL = cfg.get(Configuration.CATEGORY_GENERAL, "testBool", true).getBoolean(true);
