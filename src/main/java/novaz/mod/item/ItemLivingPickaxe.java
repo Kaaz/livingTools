@@ -157,7 +157,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 		if (itemStack.stackTagCompound != null && Arrays.asList(stats).contains(statName)) {
 			int points = itemStack.stackTagCompound.getInteger("points");
 			if (points > 0) {
-				itemStack.stackTagCompound.setInteger(stats_prefix + statName, itemStack.stackTagCompound.getInteger("stats_" + statName) + 1);
+				itemStack.stackTagCompound.setInteger(stats_prefix + statName, itemStack.stackTagCompound.getInteger(stats_prefix + statName) + 1);
 				itemStack.stackTagCompound.setInteger("points", points - 1);
 				System.out.println("upgraded " + statName);
 			}
