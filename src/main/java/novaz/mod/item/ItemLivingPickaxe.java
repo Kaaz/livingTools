@@ -13,6 +13,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import novaz.mod.PassiveEnchanting;
+import novaz.mod.item.special.StatType;
 import novaz.mod.references.Names;
 import org.lwjgl.input.Keyboard;
 
@@ -25,27 +26,29 @@ import java.util.Set;
  */
 public class ItemLivingPickaxe extends PEItemTool {
 	private static final Set worksAgainst = Sets.newHashSet(new Block[]{Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail});
-	private final int XP_PER_LEVEL = 5;
-	private final int MAX_LEVEL = 100;
-	private final String stats_prefix = "stat_";
-	public final String[] stats = {"speed", "durability", "damage", "mininglevel", "fortune"};
+	//public final String[] stats = {"speed", "durability","regen" ,"damage", "mininglevel","fortune"};
 
-	public String[] getSpecialStats() {
-		return stats;
-	}
 
 	public ItemLivingPickaxe() {
 		super(1f, ToolMaterial.WOOD, worksAgainst);
 		setUnlocalizedName(Names.Items.LIVING_PICKAXE);
-		setNoRepair();
-		setMaxDamage(10);
+
+		addItemStat("speed","speed",50,1,0.5);
+		addItemStat("mininglevel","Mining level",3,1,5);
+		addItemStat("damage","Damage",50,1,0);
+		addItemStat("fortune","Fortune",3,1,5);
+	}
+
+	public boolean hitEntity(ItemStack itemStack, EntityLivingBase p_77644_2_, EntityLivingBase p_77644_3_) {
+		//itemStack.damageItem(2, p_77644_3_);
+		return true;
 	}
 
 	@Override
 	public boolean canHarvestBlock(Block block, ItemStack itemStack) {
 		int harvestLevel = this.toolMaterial.getHarvestLevel();
 		if (itemStack.stackTagCompound != null) {
-			harvestLevel = itemStack.stackTagCompound.getInteger(stats_prefix + "mininglevel");
+			harvestLevel = itemStack.stackTagCompound.getInteger(statsPrefix + "mininglevel");
 		}
 		return block == Blocks.obsidian ? harvestLevel >= 3 : (block != Blocks.diamond_block && block != Blocks.diamond_ore ? (block != Blocks.emerald_ore && block != Blocks.emerald_block ? (block != Blocks.gold_block && block != Blocks.gold_ore ? (block != Blocks.iron_block && block != Blocks.iron_ore ? (block != Blocks.lapis_block && block != Blocks.lapis_ore ? (block != Blocks.redstone_ore && block != Blocks.lit_redstone_ore ? (block.getMaterial() == Material.rock ? true : (block.getMaterial() == Material.iron ? true : block.getMaterial() == Material.anvil)) : harvestLevel >= 2) : harvestLevel >= 1) : harvestLevel >= 1) : harvestLevel >= 2) : harvestLevel >= 2) : harvestLevel >= 2);
 	}
@@ -56,10 +59,10 @@ public class ItemLivingPickaxe extends PEItemTool {
 
 	@Override
 	public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase player) {
-
-		if ((double) block.getBlockHardness(world, x, y, z) != 0.0D) {
+		System.out.println(String.format("Item dmg/max %s/%s", itemStack.getItemDamage(), itemStack.getMaxDamage()));
+		if ((double) block.getBlockHardness(world, x, y, z) != 0.0D && worksAgainst.contains(block)) {
 			if (itemStack.stackTagCompound == null) {
-				initItem(itemStack, (EntityPlayer) player);
+				initItem(itemStack);
 			}
 			//p_150894_1_.damageItem(1, p_150894_7_);
 
@@ -85,21 +88,6 @@ public class ItemLivingPickaxe extends PEItemTool {
 		}
 	}
 
-	@Override
-	public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
-		initItem(itemStack, player);
-	}
-
-	private void initItem(ItemStack itemStack, EntityPlayer player) {
-		itemStack.stackTagCompound = new NBTTagCompound();
-		itemStack.stackTagCompound.setString("owner", player.getDisplayName());
-		itemStack.stackTagCompound.setInteger("level", 0);
-		itemStack.stackTagCompound.setInteger("xp", 0);
-		itemStack.stackTagCompound.setInteger("points", 0);
-		for (int i = 0; i < stats.length; i++) {
-			itemStack.stackTagCompound.setInteger(stats_prefix + stats[i], 0);
-		}
-	}
 
 	public void addInformation(ItemStack itemStack, EntityPlayer player,
 							   List list, boolean par4) {
@@ -110,8 +98,6 @@ public class ItemLivingPickaxe extends PEItemTool {
 			int points = itemStack.stackTagCompound.getInteger("points");
 			int xpToNext = XP_PER_LEVEL * (level + 1);
 			int progress = (int) (((float) xp / (float) xpToNext) * 100);
-			String owner = itemStack.stackTagCompound.getString("owner");
-			list.add("owner: " + colorfy(owner));
 			list.add("level " + colorfy(level));
 			list.add(String.format("Experience: %s %% [%s / %s]", colorfy(progress, EnumChatFormatting.AQUA), colorfy(xp), colorfy(xpToNext)));
 			if (!shiftPressed) {
@@ -119,10 +105,10 @@ public class ItemLivingPickaxe extends PEItemTool {
 					list.add(String.format("You have %s unspend point(s)!", colorfy(points)));
 					list.add("" + EnumChatFormatting.ITALIC + " " + EnumChatFormatting.WHITE + "Rightclick to spend them ");
 				}
-				list.add("" + EnumChatFormatting.WHITE + " " + EnumChatFormatting.ITALIC + "press Shift to see stats");
+				list.add("" + EnumChatFormatting.WHITE + " " + EnumChatFormatting.ITALIC + "press Shift to see itemStats");
 			} else {
-				for (String s : stats) {
-					list.add(String.format("%s: %s", s, colorfy(itemStack.stackTagCompound.getInteger(stats_prefix + s))));
+				for (StatType s : itemStats.values()) {
+					list.add(String.format("%s: %s", s, colorfy(itemStack.stackTagCompound.getInteger(statsPrefix + s))));
 				}
 			}
 		}
@@ -145,7 +131,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 	public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
 		if (itemStack.stackTagCompound != null) {
 			if (ForgeHooks.isToolEffective(itemStack, block, meta)) {
-				return efficiencyOnProperMaterial +itemStack.stackTagCompound.getInteger(stats_prefix + "speed");
+				return efficiencyOnProperMaterial + itemStack.stackTagCompound.getInteger(statsPrefix + "speed");
 			}
 		}
 		return super.getDigSpeed(itemStack, block, meta);
@@ -164,16 +150,5 @@ public class ItemLivingPickaxe extends PEItemTool {
 
 	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		return false;
-	}
-
-	public void upgradeStat(ItemStack itemStack, String statName) {
-		if (itemStack.stackTagCompound != null && Arrays.asList(stats).contains(statName)) {
-			int points = itemStack.stackTagCompound.getInteger("points");
-			if (points > 0) {
-				itemStack.stackTagCompound.setInteger(stats_prefix + statName, itemStack.stackTagCompound.getInteger(stats_prefix + statName) + 1);
-				itemStack.stackTagCompound.setInteger("points", points - 1);
-				System.out.println("upgraded " + statName);
-			}
-		}
 	}
 }

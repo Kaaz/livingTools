@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import novaz.mod.PassiveEnchanting;
 import novaz.mod.item.ItemLivingPickaxe;
+import novaz.mod.item.special.StatType;
 import novaz.mod.network.ToolUpgradeMessage;
 import novaz.mod.references.Names;
 import novaz.mod.startup.PEItems;
@@ -21,7 +22,7 @@ public class ItemUpgradeGui extends GuiScreen {
 	private int startX = 75, startY = 50;
 	private String owner = "";
 	private int level = 0, xp = 0, points = 0;
-	private String[] statNames;
+	private StatType[] stats;
 	private int[] statValues;
 
 	public ItemUpgradeGui(EntityPlayer player) {
@@ -33,15 +34,16 @@ public class ItemUpgradeGui extends GuiScreen {
 
 	public void loadItem(ItemStack itemStack) {
 		if (pickaxe) {
-			statNames = ((ItemLivingPickaxe) PEItems.pickaxe).getSpecialStats();
-			statValues = new int[statNames.length];
+
+			stats = ((ItemLivingPickaxe) PEItems.pickaxe).getSpecialStats();
+			statValues = new int[stats.length];
 			if (itemStack.getTagCompound() != null) {
 				owner = itemStack.stackTagCompound.getString("owner");
 				level = itemStack.stackTagCompound.getInteger("level");
 				xp = itemStack.stackTagCompound.getInteger("xp");
 				points = itemStack.stackTagCompound.getInteger("points");
-				for (int i = 0; i < statNames.length; i++) {
-					statValues[i] = itemStack.stackTagCompound.getInteger("stat_" + statNames[i]);
+				for (int i = 0; i < stats.length; i++) {
+					statValues[i] = itemStack.stackTagCompound.getInteger("stat_" + stats[i].name);
 				}
 			}
 		}
@@ -51,8 +53,13 @@ public class ItemUpgradeGui extends GuiScreen {
 	public void initGui() {//id,x,y,w,h,display
 		buttonList.clear();
 		//drawString are: string, x, y, color
-		for (int i = 0; i < statNames.length; i++) {
-			buttonList.add(new GuiButton(i, startX, startY + (i * 20), 100, 20, statNames[i]));
+		for (int i = 0; i < stats.length; i++) {
+			int cost= (int)(stats[i].costPerLevel*statValues[i]);
+			GuiButton gb = new GuiButton(i, startX, startY + (i * 20), 100, 20, String.format("%s [%s]",stats[i].name,cost));
+			if(cost>points && statValues[i]>=stats[i].maxLevel){
+				gb.enabled=false;
+			}
+			buttonList.add(gb);
 		}
 	}
 
@@ -76,11 +83,12 @@ public class ItemUpgradeGui extends GuiScreen {
 
 	@Override
 	public void actionPerformed(GuiButton button) {
-		System.out.println(String.format("Clicked on %s", statNames[button.id]));
+		System.out.println(String.format("Clicked on %s", stats[button.id].name));
 		if (pickaxe) {
-			((ItemLivingPickaxe) PEItems.pickaxe).upgradeStat(equippedItem, statNames[button.id]);
-			PassiveEnchanting.network.sendToServer(new ToolUpgradeMessage(statNames[button.id]));
+			((ItemLivingPickaxe) PEItems.pickaxe).upgradeStat(equippedItem, stats[button.id].name);
+			PassiveEnchanting.network.sendToServer(new ToolUpgradeMessage(stats[button.id].name));
 			loadItem(equippedItem);
+			initGui();
 		}
 	}
 }
