@@ -52,7 +52,7 @@ public class ItemUpgradeGui extends GuiScreen {
 		buttonList.clear();
 		//drawString are: string, x, y, color
 		for (int i = 0; i < statNames.length; i++) {
-			buttonList.add(new GuiButton(i, startX, startY + (i * 20), 100, 20, String.format("%s [%s]", statNames[i], statValues[i])));
+			buttonList.add(new GuiButton(i, startX, startY + (i * 20), 100, 20, statNames[i]));
 		}
 	}
 

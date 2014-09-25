@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import novaz.mod.PassiveEnchanting;
 import novaz.mod.references.Names;
 import org.lwjgl.input.Keyboard;
@@ -24,7 +25,7 @@ import java.util.Set;
  */
 public class ItemLivingPickaxe extends PEItemTool {
 	private static final Set worksAgainst = Sets.newHashSet(new Block[]{Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail});
-	private final int XP_PER_LEVEL = 5;
+	private final int XP_PER_LEVEL = 1;
 	private final int MAX_LEVEL = 100;
 	private final String stats_prefix = "stat_";
 	public final String[] stats = {"speed", "durability", "damage", "mininglevel", "fortune"};
@@ -111,7 +112,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 			if (!shiftPressed) {
 				if (points > 0) {
 					list.add(String.format("You have %s unspend point(s)!", colorfy(points)));
-					list.add("" + EnumChatFormatting.ITALIC + " " + EnumChatFormatting.WHITE + " Rightclick to spend them ");
+					list.add("" + EnumChatFormatting.ITALIC + " " + EnumChatFormatting.WHITE + "Rightclick to spend them ");
 				}
 				list.add("" + EnumChatFormatting.WHITE + " " + EnumChatFormatting.ITALIC + "press Shift to see stats");
 			} else {
@@ -137,15 +138,21 @@ public class ItemLivingPickaxe extends PEItemTool {
 
 	@Override
 	public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
+		if (itemStack.stackTagCompound != null) {
+			if (ForgeHooks.isToolEffective(itemStack, block, meta)) {
+				return efficiencyOnProperMaterial +itemStack.stackTagCompound.getInteger(stats_prefix + "speed");
+			}
+		}
 		return super.getDigSpeed(itemStack, block, meta);
 	}
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		if(itemStack.stackTagCompound != null)
-		if (world.isRemote && itemStack.stackTagCompound.getInteger("points")>0) {//client
-			player.openGui(PassiveEnchanting.instance, PassiveEnchanting.GUI_ITEM_UPGRADE, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+		if (itemStack.stackTagCompound != null) {
+			if (world.isRemote && itemStack.stackTagCompound.getInteger("points") > 0) {//client
+				player.openGui(PassiveEnchanting.instance, PassiveEnchanting.GUI_ITEM_UPGRADE, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 
+			}
 		}
 		return super.onItemRightClick(itemStack, world, player);
 	}
@@ -153,6 +160,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		return false;
 	}
+
 	public void upgradeStat(ItemStack itemStack, String statName) {
 		if (itemStack.stackTagCompound != null && Arrays.asList(stats).contains(statName)) {
 			int points = itemStack.stackTagCompound.getInteger("points");
