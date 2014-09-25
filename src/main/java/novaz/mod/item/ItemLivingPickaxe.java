@@ -26,6 +26,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 	private static final Set worksAgainst = Sets.newHashSet(new Block[]{Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail});
 	private final int XP_PER_LEVEL = 5;
 	private final int MAX_LEVEL = 100;
+	private final String stats_prefix = "stat_";
 	public final String[] stats = {"speed", "durability", "damage", "mininglevel", "fortune"};
 
 	public String[] getSpecialStats() {
@@ -90,7 +91,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 		itemStack.stackTagCompound.setInteger("xp", 0);
 		itemStack.stackTagCompound.setInteger("points", 0);
 		for (int i = 0; i < stats.length; i++) {
-			itemStack.stackTagCompound.setInteger("stat_" + stats[i], 0);
+			itemStack.stackTagCompound.setInteger(stats_prefix + stats[i], 0);
 		}
 	}
 
@@ -112,10 +113,10 @@ public class ItemLivingPickaxe extends PEItemTool {
 					list.add(String.format("You have %s unspend point(s)!", colorfy(points)));
 					list.add("" + EnumChatFormatting.ITALIC + " " + EnumChatFormatting.WHITE + " Rightclick to spend them ");
 				}
-				list.add("" + EnumChatFormatting.ITALIC + " " + EnumChatFormatting.WHITE + "press Shift to see stats");
+				list.add("" + EnumChatFormatting.WHITE + " " + EnumChatFormatting.ITALIC + "press Shift to see stats");
 			} else {
 				for (String s : stats) {
-					list.add(String.format("%s: %s", s, colorfy(itemStack.stackTagCompound.getInteger("stat_" + s))));
+					list.add(String.format("%s: %s", s, colorfy(itemStack.stackTagCompound.getInteger(stats_prefix + s))));
 				}
 			}
 		}
@@ -141,7 +142,8 @@ public class ItemLivingPickaxe extends PEItemTool {
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		if (world.isRemote) {//client
+		if(itemStack.stackTagCompound != null)
+		if (world.isRemote && itemStack.stackTagCompound.getInteger("points")>0) {//client
 			player.openGui(PassiveEnchanting.instance, PassiveEnchanting.GUI_ITEM_UPGRADE, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 
 		}
@@ -151,12 +153,11 @@ public class ItemLivingPickaxe extends PEItemTool {
 	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		return false;
 	}
-
 	public void upgradeStat(ItemStack itemStack, String statName) {
 		if (itemStack.stackTagCompound != null && Arrays.asList(stats).contains(statName)) {
 			int points = itemStack.stackTagCompound.getInteger("points");
 			if (points > 0) {
-				itemStack.stackTagCompound.setInteger("stats_" + statName, itemStack.stackTagCompound.getInteger("stats_" + statName) + 1);
+				itemStack.stackTagCompound.setInteger(stats_prefix + statName, itemStack.stackTagCompound.getInteger("stats_" + statName) + 1);
 				itemStack.stackTagCompound.setInteger("points", points - 1);
 				System.out.println("upgraded " + statName);
 			}
