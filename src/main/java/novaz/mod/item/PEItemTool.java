@@ -47,9 +47,8 @@ public abstract class PEItemTool extends ItemTool {
 		if (itemStack.stackTagCompound != null && itemStats.containsKey(statName)) {
 			StatType upgradeStat = itemStats.get(statName);
 			float oldLevel = getItemStat(itemStack,statName);
-			int points = getItemStat(itemStack, "points");
+			int points = itemStack.stackTagCompound.getInteger("points");
 			int cost = upgradeStat.baseCost +(int)(upgradeStat.costPerLevel*oldLevel);
-
 			if (points >= cost && oldLevel < upgradeStat.maxLevel ) {
 				addToItemStat(itemStack,statName,1);
 				itemStack.stackTagCompound.setInteger("points", points - cost);

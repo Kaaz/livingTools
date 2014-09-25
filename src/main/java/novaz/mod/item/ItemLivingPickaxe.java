@@ -8,7 +8,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
@@ -17,7 +16,6 @@ import novaz.mod.item.special.StatType;
 import novaz.mod.references.Names;
 import org.lwjgl.input.Keyboard;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -33,10 +31,10 @@ public class ItemLivingPickaxe extends PEItemTool {
 		super(1f, ToolMaterial.WOOD, worksAgainst);
 		setUnlocalizedName(Names.Items.LIVING_PICKAXE);
 
-		addItemStat("speed","speed",50,1,0.5);
-		addItemStat("mininglevel","Mining level",3,1,5);
-		addItemStat("damage","Damage",50,1,0);
-		addItemStat("fortune","Fortune",3,1,5);
+		addItemStat("speed", "speed", 50, 1, 0.5);
+		addItemStat("mininglevel", "Mining level", 3, 1, 5);
+		addItemStat("damage", "Damage", 50, 1, 0);
+		addItemStat("fortune", "Fortune", 3, 1, 5);
 	}
 
 	public boolean hitEntity(ItemStack itemStack, EntityLivingBase p_77644_2_, EntityLivingBase p_77644_3_) {
@@ -48,7 +46,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 	public boolean canHarvestBlock(Block block, ItemStack itemStack) {
 		int harvestLevel = this.toolMaterial.getHarvestLevel();
 		if (itemStack.stackTagCompound != null) {
-			harvestLevel = itemStack.stackTagCompound.getInteger(statsPrefix + "mininglevel");
+			harvestLevel = getItemStat(itemStack, "mininglevel");
 		}
 		return block == Blocks.obsidian ? harvestLevel >= 3 : (block != Blocks.diamond_block && block != Blocks.diamond_ore ? (block != Blocks.emerald_ore && block != Blocks.emerald_block ? (block != Blocks.gold_block && block != Blocks.gold_ore ? (block != Blocks.iron_block && block != Blocks.iron_ore ? (block != Blocks.lapis_block && block != Blocks.lapis_ore ? (block != Blocks.redstone_ore && block != Blocks.lit_redstone_ore ? (block.getMaterial() == Material.rock ? true : (block.getMaterial() == Material.iron ? true : block.getMaterial() == Material.anvil)) : harvestLevel >= 2) : harvestLevel >= 1) : harvestLevel >= 1) : harvestLevel >= 2) : harvestLevel >= 2) : harvestLevel >= 2);
 	}
@@ -108,7 +106,7 @@ public class ItemLivingPickaxe extends PEItemTool {
 				list.add("" + EnumChatFormatting.WHITE + " " + EnumChatFormatting.ITALIC + "press Shift to see itemStats");
 			} else {
 				for (StatType s : itemStats.values()) {
-					list.add(String.format("%s: %s", s, colorfy(itemStack.stackTagCompound.getInteger(statsPrefix + s))));
+					list.add(String.format("%s: %s", s.name, colorfy(itemStack.stackTagCompound.getInteger(statsPrefix + s.name))));
 				}
 			}
 		}

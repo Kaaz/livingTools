@@ -54,10 +54,10 @@ public class ItemUpgradeGui extends GuiScreen {
 		buttonList.clear();
 		//drawString are: string, x, y, color
 		for (int i = 0; i < stats.length; i++) {
-			int cost= (int)(stats[i].costPerLevel*statValues[i]);
-			GuiButton gb = new GuiButton(i, startX, startY + (i * 20), 100, 20, String.format("%s [%s]",stats[i].name,cost));
-			if(cost>points && statValues[i]>=stats[i].maxLevel){
-				gb.enabled=false;
+			int cost = stats[i].baseCost+(int) (stats[i].costPerLevel * statValues[i]);
+			GuiButton gb = new GuiButton(i, startX, startY + (i * 20), 100, 20, String.format("%s [%s]", stats[i].name, cost));
+			if (cost > points || statValues[i] >= stats[i].maxLevel) {
+				gb.enabled = false;
 			}
 			buttonList.add(gb);
 		}
@@ -71,13 +71,15 @@ public class ItemUpgradeGui extends GuiScreen {
 	@Override
 	public void drawScreen(int i, int j, float f) {
 		drawDefaultBackground();
+		int ii = 0;
 		super.drawScreen(i, j, f);
 		fontRendererObj.drawStringWithShadow("Pickaxe upgrade menu", startX, startY - 20, 0xffFFFFFF);
-		for (int ii = 0; ii < statValues.length; ii++) {
+		for (; ii < statValues.length; ii++) {
 			fontRendererObj.drawString("Current: " + statValues[ii], startX + 120, startY + 5 + (ii * 20), 0xffffffff);
 		}
+
 		if (points > 0) {
-			fontRendererObj.drawString("You have " + points + " point(s) left!", startX, startY + 105, 0xffffffff);
+			fontRendererObj.drawString("You have " + points + " point(s) left!", startX, startY + (ii * 20) + 5, 0xffffffff);
 		}
 	}
 
