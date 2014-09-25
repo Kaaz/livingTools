@@ -4,7 +4,7 @@ import novaz.mod.PassiveEnchanting;
 
 public class Names {
 	public static final String RESOURCE_PREFIX = PassiveEnchanting.MOD_ID.toLowerCase() + ":";
-
+	public static final String CHANNEL = PassiveEnchanting.MOD_ID.toLowerCase();
 	public static final class Items {
 		public static final String getFullName(String name) {
 			return String.format("item.%s%s", Names.RESOURCE_PREFIX, name);
