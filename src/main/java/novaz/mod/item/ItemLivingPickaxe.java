@@ -125,27 +125,6 @@ public class ItemLivingPickaxe extends PEItemTool {
 		return ImmutableSet.of("pickaxe");
 	}
 
-	@Override
-	public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
-		if (itemStack.stackTagCompound != null) {
-			if (ForgeHooks.isToolEffective(itemStack, block, meta)) {
-				return efficiencyOnProperMaterial + itemStack.stackTagCompound.getInteger(statsPrefix + "speed");
-			}
-		}
-		return super.getDigSpeed(itemStack, block, meta);
-	}
-
-	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		if (itemStack.stackTagCompound != null) {
-			if (world.isRemote && itemStack.stackTagCompound.getInteger("points") > 0) {//client
-				player.openGui(PassiveEnchanting.instance, PassiveEnchanting.GUI_ITEM_UPGRADE, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-
-			}
-		}
-		return super.onItemRightClick(itemStack, world, player);
-	}
-
 	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		return false;
 	}

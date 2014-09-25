@@ -2,12 +2,14 @@ package novaz.mod.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import novaz.mod.PassiveEnchanting;
 import novaz.mod.item.special.StatType;
 import novaz.mod.references.Names;
@@ -46,17 +48,35 @@ public abstract class PEItemTool extends ItemTool {
 	public void upgradeStat(ItemStack itemStack, String statName) {
 		if (itemStack.stackTagCompound != null && itemStats.containsKey(statName)) {
 			StatType upgradeStat = itemStats.get(statName);
-			float oldLevel = getItemStat(itemStack,statName);
+			float oldLevel = getItemStat(itemStack, statName);
 			int points = itemStack.stackTagCompound.getInteger("points");
 			int cost = upgradeStat.baseCost +(int)(upgradeStat.costPerLevel*oldLevel);
 			if (points >= cost && oldLevel < upgradeStat.maxLevel ) {
-				addToItemStat(itemStack,statName,1);
+				addToItemStat(itemStack, statName, 1);
 				itemStack.stackTagCompound.setInteger("points", points - cost);
 				System.out.println("upgraded " + statName);
 			}
 		}
 	}
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+		if (itemStack.stackTagCompound != null) {
+			if (world.isRemote && itemStack.stackTagCompound.getInteger("points") > 0) {//client
+				player.openGui(PassiveEnchanting.instance, PassiveEnchanting.GUI_ITEM_UPGRADE, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 
+			}
+		}
+		return super.onItemRightClick(itemStack, world, player);
+	}
+	@Override
+	public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
+		if (itemStack.stackTagCompound != null) {
+			if (ForgeHooks.isToolEffective(itemStack, block, meta)) {
+				return efficiencyOnProperMaterial + getItemStat(itemStack,"speed");
+			}
+		}
+		return super.getDigSpeed(itemStack, block, meta);
+	}
 	@Override
 	public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
 		initItem(itemStack);
