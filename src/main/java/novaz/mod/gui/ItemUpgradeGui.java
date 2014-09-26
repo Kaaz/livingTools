@@ -6,9 +6,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import novaz.mod.PassiveEnchanting;
 import novaz.mod.item.ItemLivingPickaxe;
+import novaz.mod.item.PEItemTool;
 import novaz.mod.item.special.StatType;
 import novaz.mod.network.ToolUpgradeMessage;
-import novaz.mod.references.Names;
 import novaz.mod.startup.PEItems;
 
 /**
@@ -18,7 +18,8 @@ public class ItemUpgradeGui extends GuiScreen {
 	public static final int GUI_ID = PassiveEnchanting.GUI_ITEM_UPGRADE;
 	private EntityPlayer player;
 	private ItemStack equippedItem;
-	private boolean pickaxe = false;
+	private PEItemTool itemClass;
+	private boolean validTool = false;
 	private int startX = 75, startY = 50;
 	private String owner = "";
 	private int level = 0, xp = 0, points = 0;
@@ -28,14 +29,14 @@ public class ItemUpgradeGui extends GuiScreen {
 	public ItemUpgradeGui(EntityPlayer player) {
 		this.player = player;
 		equippedItem = player.getCurrentEquippedItem();
-		pickaxe = equippedItem.getUnlocalizedName().equals(Names.Items.getFullName(Names.Items.LIVING_PICKAXE));
 		loadItem(equippedItem);
 	}
 
 	public void loadItem(ItemStack itemStack) {
-		if (pickaxe) {
-
-			stats = ((ItemLivingPickaxe) PEItems.pickaxe).getSpecialStats();
+		validTool = equippedItem.getItem() instanceof PEItemTool;
+		if (validTool) {
+			itemClass = (PEItemTool) equippedItem.getItem();
+			stats = itemClass.getSpecialStats();
 			statValues = new int[stats.length];
 			if (itemStack.getTagCompound() != null) {
 				owner = itemStack.stackTagCompound.getString("owner");
@@ -54,7 +55,7 @@ public class ItemUpgradeGui extends GuiScreen {
 		buttonList.clear();
 		//drawString are: string, x, y, color
 		for (int i = 0; i < stats.length; i++) {
-			int cost = stats[i].baseCost+(int) (stats[i].costPerLevel * statValues[i]);
+			int cost = stats[i].baseCost + (int) (stats[i].costPerLevel * statValues[i]);
 			GuiButton gb = new GuiButton(i, startX, startY + (i * 20), 100, 20, String.format("%s [%s]", stats[i].name, cost));
 			if (cost > points || statValues[i] >= stats[i].maxLevel) {
 				gb.enabled = false;
@@ -86,8 +87,8 @@ public class ItemUpgradeGui extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		System.out.println(String.format("Clicked on %s", stats[button.id].name));
-		if (pickaxe) {
-			((ItemLivingPickaxe) PEItems.pickaxe).upgradeStat(equippedItem, stats[button.id].name);
+		if (validTool) {
+			itemClass.upgradeStat(equippedItem, stats[button.id].name);
 			PassiveEnchanting.network.sendToServer(new ToolUpgradeMessage(stats[button.id].name));
 			loadItem(equippedItem);
 			initGui();

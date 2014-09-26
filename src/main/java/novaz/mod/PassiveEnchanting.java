@@ -21,7 +21,7 @@ import novaz.mod.startup.PERecipes;
 @Mod(modid = PassiveEnchanting.MOD_ID, version = PassiveEnchanting.VERSION, dependencies = "required-after:Forge@[10.10,);required-after:FML@[7.2,)")
 public class PassiveEnchanting {
 	public static final String MOD_ID = "passiveEnchants";
-	public static final String VERSION = "0.1";
+	public static final String VERSION = "0.2";
 	private static boolean EXAMPLE_BOOL = false;
 	private static String EXAMPLE_STRING = "test";
 	public static SimpleNetworkWrapper network;

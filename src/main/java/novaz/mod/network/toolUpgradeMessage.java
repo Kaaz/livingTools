@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import novaz.mod.item.ItemLivingPickaxe;
+import novaz.mod.item.PEItemTool;
 import novaz.mod.references.Names;
 import novaz.mod.startup.PEItems;
 
@@ -37,11 +38,10 @@ public class ToolUpgradeMessage implements IMessage {
 
 			System.out.println(String.format("Received %s from %s", message.stat, ctx.getServerHandler().playerEntity.getDisplayName()));
 			ItemStack equippedItem = ctx.getServerHandler().playerEntity.getCurrentEquippedItem();
-			if(equippedItem.getUnlocalizedName().equals(Names.Items.getFullName(Names.Items.LIVING_PICKAXE))){
-
-				((ItemLivingPickaxe) PEItems.pickaxe).upgradeStat(equippedItem,message.stat);
+			if(equippedItem.getItem() instanceof PEItemTool){
+				PEItemTool pit = (PEItemTool)equippedItem.getItem();
+				pit.upgradeStat(equippedItem,message.stat);
 			}
-
 			return null; // no response in this case
 		}
 	}

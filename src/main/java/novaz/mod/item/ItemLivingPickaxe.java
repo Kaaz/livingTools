@@ -23,7 +23,7 @@ import java.util.Set;
  * Created by kaaz on 22-9-2014.
  */
 public class ItemLivingPickaxe extends PEItemTool {
-	private static final Set worksAgainst = Sets.newHashSet(new Block[]{Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail});
+	protected static Set worksAgainst = Sets.newHashSet(new Block[]{Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail});
 	//public final String[] stats = {"speed", "durability","regen" ,"damage", "mininglevel","fortune"};
 
 
@@ -33,8 +33,8 @@ public class ItemLivingPickaxe extends PEItemTool {
 
 		addItemStat("speed", "speed", 50, 1, 0.5);
 		addItemStat("mininglevel", "Mining level", 3, 1, 5);
-		addItemStat("damage", "Damage", 50, 1, 0);
-		addItemStat("fortune", "Fortune", 3, 1, 5);
+		//addItemStat("damage", "Damage", 50, 1, 0);
+		//addItemStat("fortune", "Fortune", 3, 1, 5);
 	}
 
 	public boolean hitEntity(ItemStack itemStack, EntityLivingBase p_77644_2_, EntityLivingBase p_77644_3_) {
@@ -53,63 +53,6 @@ public class ItemLivingPickaxe extends PEItemTool {
 
 	public float func_150893_a(ItemStack itemStack, Block block) {
 		return block.getMaterial() != Material.iron && block.getMaterial() != Material.anvil && block.getMaterial() != Material.rock ? super.func_150893_a(itemStack, block) : this.efficiencyOnProperMaterial;
-	}
-
-	@Override
-	public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase player) {
-		System.out.println(String.format("Item dmg/max %s/%s", itemStack.getItemDamage(), itemStack.getMaxDamage()));
-		if ((double) block.getBlockHardness(world, x, y, z) != 0.0D && worksAgainst.contains(block)) {
-			if (itemStack.stackTagCompound == null) {
-				initItem(itemStack);
-			}
-			//p_150894_1_.damageItem(1, p_150894_7_);
-
-			if (itemStack.stackTagCompound.getInteger("level") < MAX_LEVEL) {
-				itemStack.stackTagCompound.setInteger("xp", itemStack.stackTagCompound.getInteger("xp") + 1);
-			}
-
-			checkLevelUp(itemStack, player);
-		}
-		//return super.onBlockDestroyed(p_150894_1_, p_150894_2_, p_150894_3_, p_150894_4_, p_150894_5_, p_150894_6_, p_150894_7_);
-		return true;
-	}
-
-	public void checkLevelUp(ItemStack item, EntityLivingBase player) {
-		int level = item.stackTagCompound.getInteger("level");
-		int xp = item.stackTagCompound.getInteger("xp");
-		int xpToNext = XP_PER_LEVEL * (level + 1);
-		if (xp >= xpToNext) {
-
-			item.stackTagCompound.setInteger("level", level + 1);
-			item.stackTagCompound.setInteger("xp", xp - xpToNext);
-			item.stackTagCompound.setInteger("points", item.stackTagCompound.getInteger("points") + 1);
-		}
-	}
-
-
-	public void addInformation(ItemStack itemStack, EntityPlayer player,
-							   List list, boolean par4) {
-		boolean shiftPressed = Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-		if (itemStack.stackTagCompound != null) {
-			int level = itemStack.stackTagCompound.getInteger("level");
-			int xp = itemStack.stackTagCompound.getInteger("xp");
-			int points = itemStack.stackTagCompound.getInteger("points");
-			int xpToNext = XP_PER_LEVEL * (level + 1);
-			int progress = (int) (((float) xp / (float) xpToNext) * 100);
-			list.add("level " + colorfy(level));
-			list.add(String.format("Experience: %s %% [%s / %s]", colorfy(progress, EnumChatFormatting.AQUA), colorfy(xp), colorfy(xpToNext)));
-			if (!shiftPressed) {
-				if (points > 0) {
-					list.add(String.format("You have %s unspend point(s)!", colorfy(points)));
-					list.add("" + EnumChatFormatting.ITALIC + " " + EnumChatFormatting.WHITE + "Rightclick to spend them ");
-				}
-				list.add("" + EnumChatFormatting.WHITE + " " + EnumChatFormatting.ITALIC + "press Shift to see itemStats");
-			} else {
-				for (StatType s : itemStats.values()) {
-					list.add(String.format("%s: %s", s.name, colorfy(itemStack.stackTagCompound.getInteger(statsPrefix + s.name))));
-				}
-			}
-		}
 	}
 
 	public String colorfy(Object o) {
