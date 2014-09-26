@@ -49,7 +49,6 @@ public class PassiveEnchanting {
 		PERecipes.initRecipes();
 		this.proxy.preInit(event);
 	}
-
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e) {
 		this.proxy.init(e);

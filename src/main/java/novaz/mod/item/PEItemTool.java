@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,11 +28,14 @@ public abstract class PEItemTool extends ItemTool {
 	protected final String statsPrefix = "stat_";
 	protected int XP_PER_LEVEL = 5;
 	protected final int MAX_LEVEL = 150;
-	protected final int BASE_DAMAGE_PER_USE = 15;
+	protected final int BASE_DAMAGE_PER_USE = 50;
 	protected final float DAMAGEMODIFIER_PER_USE = 0.25f;
+	protected final int BASE_REGENERATION = 1;
 	protected final int DURABILITY_PER_POINT = 5;
+	protected final int REPAIR_INTERVAL = 20;
 	protected HashMap<String, StatType> itemStats = new HashMap<String, StatType>();
 	protected Set worksAgainst;
+	private int tick;
 
 	protected PEItemTool(float damage, ToolMaterial toolMaterial, Set goodAgainst) {
 		super(damage, toolMaterial, goodAgainst);
@@ -124,6 +128,18 @@ public abstract class PEItemTool extends ItemTool {
 			item.stackTagCompound.setInteger("level", level + 1);
 			item.stackTagCompound.setInteger("xp", xp - xpToNext);
 			item.stackTagCompound.setInteger("points", item.stackTagCompound.getInteger("points") + 1);
+		}
+	}
+	@Override
+	public void onUpdate(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected) {
+		super.onUpdate(itemStack, world, entity, itemSlot, isSelected);
+		tick++;
+		if(tick > REPAIR_INTERVAL){
+			int currentDamage = itemStack.getItemDamage();
+			if(currentDamage>0){
+				itemStack.setItemDamage(currentDamage - BASE_REGENERATION+getItemStat(itemStack,"regen"));
+			}
+			tick=0;
 		}
 	}
 
