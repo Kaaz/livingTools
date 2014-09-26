@@ -28,7 +28,7 @@ public abstract class PEItemTool extends ItemTool {
 	protected final String statsPrefix = "stat_";
 	protected int XP_PER_LEVEL = 5;
 	protected final int MAX_LEVEL = 150;
-	protected final int BASE_DAMAGE_PER_USE = 50;
+	protected final int BASE_DAMAGE_PER_USE = 30;
 	protected final float DAMAGEMODIFIER_PER_USE = 0.25f;
 	protected final int BASE_REGENERATION = 1;
 	protected final int DURABILITY_PER_POINT = 5;
@@ -91,6 +91,7 @@ public abstract class PEItemTool extends ItemTool {
 			int xpToNext = XP_PER_LEVEL * (level + 1);
 			int progress = (int) (((float) xp / (float) xpToNext) * 100);
 			list.add("level " + colorfy(level));
+			list.add("Damage: " + itemStack.getItemDamage());
 			list.add(String.format("Experience: %s %% [%s / %s]", colorfy(progress, EnumChatFormatting.AQUA), colorfy(xp), colorfy(xpToNext)));
 			if (!shiftPressed) {
 
@@ -133,13 +134,15 @@ public abstract class PEItemTool extends ItemTool {
 	@Override
 	public void onUpdate(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected) {
 		super.onUpdate(itemStack, world, entity, itemSlot, isSelected);
-		tick++;
-		if(tick > REPAIR_INTERVAL){
-			int currentDamage = itemStack.getItemDamage();
-			if(currentDamage>0){
-				itemStack.setItemDamage(currentDamage - BASE_REGENERATION+getItemStat(itemStack,"regen"));
+		if(!world.isRemote) {
+			tick++;
+			if (tick > REPAIR_INTERVAL) {
+				int currentDamage = itemStack.getItemDamage();
+				if (currentDamage > 0) {
+					itemStack.setItemDamage(currentDamage - (BASE_REGENERATION + getItemStat(itemStack, "regen")));
+				}
+				tick = 0;
 			}
-			tick=0;
 		}
 	}
 

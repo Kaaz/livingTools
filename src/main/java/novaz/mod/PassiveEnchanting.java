@@ -1,5 +1,6 @@
 package novaz.mod;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -9,7 +10,9 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemTool;
 import net.minecraftforge.common.config.Configuration;
+import novaz.mod.handler.server.ItemToolHandler;
 import novaz.mod.network.ToolUpgradeMessage;
 import novaz.mod.proxy.CommonProxy;
 import novaz.mod.proxy.GuiProxy;
@@ -38,6 +41,7 @@ public class PassiveEnchanting {
 	public void preInit(FMLPreInitializationEvent event) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiProxy());
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(Names.CHANNEL);
+		FMLCommonHandler.instance().bus().register(new ItemToolHandler());
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		network.registerMessage(ToolUpgradeMessage.Handler.class, ToolUpgradeMessage.class, 0, Side.SERVER);
 		cfg.load();
