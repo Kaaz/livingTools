@@ -3,6 +3,7 @@ package novaz.mod.item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +26,10 @@ public abstract class PEItemTool extends ItemTool {
 
 	protected final String statsPrefix = "stat_";
 	protected int XP_PER_LEVEL = 5;
-	protected int MAX_LEVEL = 100;
+	protected final int MAX_LEVEL = 150;
+	protected final int BASE_DAMAGE_PER_USE = 15;
+	protected final float DAMAGEMODIFIER_PER_USE = 0.25f;
+	protected final int DURABILITY_PER_POINT = 5;
 	protected HashMap<String, StatType> itemStats = new HashMap<String, StatType>();
 	protected Set worksAgainst;
 
@@ -57,13 +61,16 @@ public abstract class PEItemTool extends ItemTool {
 			if (itemStack.stackTagCompound == null) {
 				initItem(itemStack);
 			}
+			if (!hasEnoughUses(itemStack)) {
+				return false;
+			}
 			//p_150894_1_.damageItem(1, p_150894_7_);
-
+			itemStack.damageItem(getDamagePerUse(itemStack), player);
 			if (itemStack.stackTagCompound.getInteger("level") < MAX_LEVEL) {
 				itemStack.stackTagCompound.setInteger("xp", itemStack.stackTagCompound.getInteger("xp") + 1);
 			}
 
-			checkLevelUp(itemStack, player);
+			checkLevelUp(itemStack,world, player);
 		}
 		//return super.onBlockDestroyed(p_150894_1_, p_150894_2_, p_150894_3_, p_150894_4_, p_150894_5_, p_150894_6_, p_150894_7_);
 		return true;
@@ -73,6 +80,7 @@ public abstract class PEItemTool extends ItemTool {
 							   List list, boolean par4) {
 		boolean shiftPressed = Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 		if (itemStack.stackTagCompound != null) {
+
 			int level = itemStack.stackTagCompound.getInteger("level");
 			int xp = itemStack.stackTagCompound.getInteger("xp");
 			int points = itemStack.stackTagCompound.getInteger("points");
@@ -105,12 +113,14 @@ public abstract class PEItemTool extends ItemTool {
 	}
 
 
-	public void checkLevelUp(ItemStack item, EntityLivingBase player) {
+	public void checkLevelUp(ItemStack item,World world, EntityLivingBase player) {
 		int level = item.stackTagCompound.getInteger("level");
 		int xp = item.stackTagCompound.getInteger("xp");
 		int xpToNext = XP_PER_LEVEL * (level + 1);
 		if (xp >= xpToNext) {
-
+			if(!world.isRemote) {
+				Minecraft.getMinecraft().thePlayer.sendChatMessage(item.getDisplayName() + " just leveled up!");
+			}
 			item.stackTagCompound.setInteger("level", level + 1);
 			item.stackTagCompound.setInteger("xp", xp - xpToNext);
 			item.stackTagCompound.setInteger("points", item.stackTagCompound.getInteger("points") + 1);
@@ -142,11 +152,24 @@ public abstract class PEItemTool extends ItemTool {
 		return super.onItemRightClick(itemStack, world, player);
 	}
 
+	public boolean hasEnoughUses(ItemStack itemStack) {
+		return itemStack.getItemDamage() + getDamagePerUse(itemStack) < itemStack.getMaxDamage();
+	}
+
+	public int getDamagePerUse(ItemStack itemStack) {
+		return (int) (BASE_DAMAGE_PER_USE + ((float) getItemStat(itemStack, "speed")) * DAMAGEMODIFIER_PER_USE) - getItemStat(itemStack, "durability") * DURABILITY_PER_POINT;
+	}
+
 	@Override
 	public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
 		if (itemStack.stackTagCompound != null) {
 			if (ForgeHooks.isToolEffective(itemStack, block, meta)) {
-				return efficiencyOnProperMaterial + getItemStat(itemStack, "speed");
+				//itemStack.getItemDamage();
+
+				if (itemStack.getItemDamage() + getDamagePerUse(itemStack) < itemStack.getMaxDamage()) {
+					return efficiencyOnProperMaterial + getItemStat(itemStack, "speed");
+				}
+				return .5f;
 			}
 		}
 		return super.getDigSpeed(itemStack, block, meta);

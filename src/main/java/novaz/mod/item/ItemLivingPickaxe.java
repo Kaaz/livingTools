@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -41,8 +42,16 @@ public class ItemLivingPickaxe extends PEItemTool {
 	}
 
 	@Override
+	public void onUsingTick(ItemStack stack, EntityPlayer player, int count) {
+		super.onUsingTick(stack, player, count);
+	}
+
+	@Override
 	public boolean canHarvestBlock(Block block, ItemStack itemStack) {
 		int harvestLevel = this.toolMaterial.getHarvestLevel();
+		if(!hasEnoughUses(itemStack)){
+			return false;
+		}
 		if (itemStack.stackTagCompound != null) {
 			harvestLevel = getItemStat(itemStack, "mininglevel");
 		}
