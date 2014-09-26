@@ -99,6 +99,15 @@ public abstract class PEItemTool extends ItemTool {
 		}
 	}
 
+	public String colorfy(Object o) {
+		return colorfy(o, EnumChatFormatting.AQUA);
+	}
+
+	public String colorfy(Object o, EnumChatFormatting col) {
+		return "" + col + o + EnumChatFormatting.GRAY;
+	}
+
+
 	public void checkLevelUp(ItemStack item, EntityLivingBase player) {
 		int level = item.stackTagCompound.getInteger("level");
 		int xp = item.stackTagCompound.getInteger("xp");

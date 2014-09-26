@@ -54,15 +54,6 @@ public class ItemLivingPickaxe extends PEItemTool {
 	public float func_150893_a(ItemStack itemStack, Block block) {
 		return block.getMaterial() != Material.iron && block.getMaterial() != Material.anvil && block.getMaterial() != Material.rock ? super.func_150893_a(itemStack, block) : this.efficiencyOnProperMaterial;
 	}
-
-	public String colorfy(Object o) {
-		return colorfy(o, EnumChatFormatting.AQUA);
-	}
-
-	public String colorfy(Object o, EnumChatFormatting col) {
-		return "" + col + o + EnumChatFormatting.GRAY;
-	}
-
 	@Override
 	public Set<String> getToolClasses(ItemStack itemStack) {
 		return ImmutableSet.of("pickaxe");
