@@ -20,7 +20,6 @@ public class ItemLivingShovel extends PEItemTool {
 	public ItemLivingShovel() {
 		super(1.0f, Item.ToolMaterial.IRON, blocksEffectiveAgainst);
 		setUnlocalizedName(Names.Items.LIVING_SHOVEL);
-		setCreativeTab(PassiveEnchanting.TAB);
 	}
 
 	@Override
