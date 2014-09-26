@@ -1,5 +1,8 @@
-Minecraft mod
+Minecraft mod  
 
+Adds basic tools craftable with only sticks in the regular tool patterns.  
+Tools will get experience by using them on the proper blocks.  
+When a tool levels up a point can be spend by rightclicking with the tool.
 
 To install  
 
