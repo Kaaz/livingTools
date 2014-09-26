@@ -122,7 +122,7 @@ public abstract class PEItemTool extends ItemTool {
 		int xp = item.stackTagCompound.getInteger("xp");
 		int xpToNext = XP_PER_LEVEL * (level + 1);
 		if (xp >= xpToNext) {
-			if(!world.isRemote) {
+			if(world.isRemote) {
 				Minecraft.getMinecraft().thePlayer.sendChatMessage(item.getDisplayName() + " just leveled up!");
 			}
 			item.stackTagCompound.setInteger("level", level + 1);
