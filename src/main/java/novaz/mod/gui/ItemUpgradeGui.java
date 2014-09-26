@@ -5,11 +5,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import novaz.mod.PassiveEnchanting;
-import novaz.mod.item.ItemLivingPickaxe;
 import novaz.mod.item.PEItemTool;
 import novaz.mod.item.special.StatType;
 import novaz.mod.network.ToolUpgradeMessage;
-import novaz.mod.startup.PEItems;
 
 /**
  * Created by kaaz on 24-9-2014.
