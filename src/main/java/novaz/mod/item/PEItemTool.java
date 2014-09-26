@@ -91,6 +91,10 @@ public abstract class PEItemTool extends ItemTool {
 			int xpToNext = XP_PER_LEVEL * (level + 1);
 			int progress = (int) (((float) xp / (float) xpToNext) * 100);
 			list.add("level " + colorfy(level));
+			if(!shiftPressed) {
+				list.add("" + EnumChatFormatting.DARK_GRAY+ "" + EnumChatFormatting.ITALIC + "press Shift to see itemStats");
+				list.add("");
+			}
 			list.add("Damage: " + itemStack.getItemDamage());
 			list.add(String.format("Experience: %s %% [%s / %s]", colorfy(progress, EnumChatFormatting.AQUA), colorfy(xp), colorfy(xpToNext)));
 			if (!shiftPressed) {
@@ -100,7 +104,7 @@ public abstract class PEItemTool extends ItemTool {
 					list.add(String.format("You have %s unspend point(s)!", colorfy(points)));
 					list.add("" + EnumChatFormatting.ITALIC + " " + EnumChatFormatting.WHITE + "Rightclick to spend them ");
 				}
-				list.add("" + EnumChatFormatting.WHITE + " " + EnumChatFormatting.ITALIC + "press Shift to see itemStats");
+
 			} else {
 				for (StatType s : itemStats.values()) {
 					list.add(String.format("%s: %s", s.name, colorfy(itemStack.stackTagCompound.getInteger(statsPrefix + s.name))));
