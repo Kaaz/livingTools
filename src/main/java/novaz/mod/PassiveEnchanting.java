@@ -41,7 +41,6 @@ public class PassiveEnchanting {
 	public void preInit(FMLPreInitializationEvent event) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiProxy());
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(Names.CHANNEL);
-		FMLCommonHandler.instance().bus().register(new ItemToolHandler());
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		network.registerMessage(ToolUpgradeMessage.Handler.class, ToolUpgradeMessage.class, 0, Side.SERVER);
 		cfg.load();
