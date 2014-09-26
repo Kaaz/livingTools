@@ -18,7 +18,7 @@ public class ItemLivingAxe extends PEItemTool {
 
 	public ItemLivingAxe() {
 
-		super(3f, ToolMaterial.IRON, blocksEffectiveAgainst);
+		super(3f, ToolMaterial.WOOD, blocksEffectiveAgainst);
 		setUnlocalizedName(Names.Items.LIVING_AXE);
 		setCreativeTab(PassiveEnchanting.TAB);
 	}

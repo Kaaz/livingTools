@@ -18,7 +18,7 @@ public class ItemLivingShovel extends PEItemTool {
 	private static final Set blocksEffectiveAgainst = Sets.newHashSet(new Block[]{Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium});
 
 	public ItemLivingShovel() {
-		super(1.0f, Item.ToolMaterial.IRON, blocksEffectiveAgainst);
+		super(1.0f, ToolMaterial.WOOD, blocksEffectiveAgainst);
 		setUnlocalizedName(Names.Items.LIVING_SHOVEL);
 	}
 

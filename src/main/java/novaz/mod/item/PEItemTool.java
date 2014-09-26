@@ -53,9 +53,6 @@ public abstract class PEItemTool extends ItemTool {
 
 	@Override
 	public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase player) {
-		System.out.println(String.format("Item dmg/max %s/%s", itemStack.getItemDamage(), itemStack.getMaxDamage()));
-		System.out.println("Is a pickaxe? " + (itemStack.getItem() instanceof ItemLivingPickaxe));
-		System.out.println(block.toString());
 		if ((double) block.getBlockHardness(world, x, y, z) != 0.0D && worksAgainst.contains(block)) {
 			if (itemStack.stackTagCompound == null) {
 				initItem(itemStack);
