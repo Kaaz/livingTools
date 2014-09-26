@@ -30,8 +30,6 @@ public class ItemLivingPickaxe extends PEItemTool {
 	public ItemLivingPickaxe() {
 		super(1f, ToolMaterial.WOOD, worksAgainst);
 		setUnlocalizedName(Names.Items.LIVING_PICKAXE);
-
-		addItemStat("speed", "speed", 50, 1, 0.5);
 		addItemStat("mininglevel", "Mining level", 3, 1, 5);
 		//addItemStat("damage", "Damage", 50, 1, 0);
 		//addItemStat("fortune", "Fortune", 3, 1, 5);

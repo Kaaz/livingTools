@@ -38,7 +38,7 @@ public abstract class PEItemTool extends ItemTool {
 		setMaxDamage(1000);
 		addItemStat("durability", "Durability", 50, 1, 0.2);
 		addItemStat("regen", "Regeneration", 50, 1, 0.2);
-
+		addItemStat("speed", "speed", 50, 1, 0.5);
 	}
 
 	protected void addItemStat(String name, String description, int maxLevel, int baseCost, double costPerLevel) {
