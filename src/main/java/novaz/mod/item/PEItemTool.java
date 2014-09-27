@@ -35,7 +35,6 @@ public abstract class PEItemTool extends ItemTool {
 	protected final int REPAIR_INTERVAL = 20;
 	protected HashMap<String, StatType> itemStats = new HashMap<String, StatType>();
 	protected Set worksAgainst;
-	private int tick;
 
 	protected PEItemTool(float damage, ToolMaterial toolMaterial, Set goodAgainst) {
 		super(damage, toolMaterial, goodAgainst);
@@ -74,7 +73,7 @@ public abstract class PEItemTool extends ItemTool {
 				itemStack.stackTagCompound.setInteger("xp", itemStack.stackTagCompound.getInteger("xp") + 1);
 			}
 
-			checkLevelUp(itemStack,world, player);
+			checkLevelUp(itemStack, world, player);
 		}
 		//return super.onBlockDestroyed(p_150894_1_, p_150894_2_, p_150894_3_, p_150894_4_, p_150894_5_, p_150894_6_, p_150894_7_);
 		return true;
@@ -91,8 +90,8 @@ public abstract class PEItemTool extends ItemTool {
 			int xpToNext = XP_PER_LEVEL * (level + 1);
 			int progress = (int) (((float) xp / (float) xpToNext) * 100);
 			list.add("level " + colorfy(level));
-			if(!shiftPressed) {
-				list.add("" + EnumChatFormatting.DARK_GRAY+ "" + EnumChatFormatting.ITALIC + "press Shift to see itemStats");
+			if (!shiftPressed) {
+				list.add("" + EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + "press Shift to see itemStats");
 				list.add("");
 			}
 			list.add("Damage: " + itemStack.getItemDamage());
@@ -122,12 +121,12 @@ public abstract class PEItemTool extends ItemTool {
 	}
 
 
-	public void checkLevelUp(ItemStack item,World world, EntityLivingBase player) {
+	public void checkLevelUp(ItemStack item, World world, EntityLivingBase player) {
 		int level = item.stackTagCompound.getInteger("level");
 		int xp = item.stackTagCompound.getInteger("xp");
 		int xpToNext = XP_PER_LEVEL * (level + 1);
 		if (xp >= xpToNext) {
-			if(world.isRemote) {
+			if (world.isRemote) {
 				Minecraft.getMinecraft().thePlayer.sendChatMessage(item.getDisplayName() + " just leveled up!");
 			}
 			item.stackTagCompound.setInteger("level", level + 1);
@@ -135,17 +134,14 @@ public abstract class PEItemTool extends ItemTool {
 			item.stackTagCompound.setInteger("points", item.stackTagCompound.getInteger("points") + 1);
 		}
 	}
+
 	@Override
 	public void onUpdate(ItemStack itemStack, World world, Entity entity, int itemSlot, boolean isSelected) {
 		super.onUpdate(itemStack, world, entity, itemSlot, isSelected);
-		if(!world.isRemote) {
-			tick++;
-			if (tick > REPAIR_INTERVAL) {
-				int currentDamage = itemStack.getItemDamage();
-				if (currentDamage > 0) {
-					itemStack.setItemDamage(currentDamage - (BASE_REGENERATION + getItemStat(itemStack, "regen")));
-				}
-				tick = 0;
+		if (world.getWorldTime() % REPAIR_INTERVAL == 0) {
+			int currentDamage = itemStack.getItemDamage();
+			if (currentDamage > 0) {
+				itemStack.setItemDamage(currentDamage - (BASE_REGENERATION + getItemStat(itemStack, "regen")));
 			}
 		}
 	}
