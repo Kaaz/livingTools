@@ -20,9 +20,12 @@ apply plugin: 'forge'
 version = "0.1"
 group= "novaz.mod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "passiveEnchants"
-
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
 minecraft {
-    version = "1.7.10-10.13.0.1180"
+    version = "1.7.10-10.13.4.1614-1.7.10"
     assetDir = "eclipse/assets"
 }
 
